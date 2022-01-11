@@ -1,0 +1,58 @@
+﻿@model CategoryCreateViewModel
+<div class="col-md-6 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Category form</h4>
+            <p class="card-description">
+                Create a category
+            </p>
+            <form enctype="multipart/form-data" class="forms-sample" asp-action="Create" method="post" >
+                <div class="form-group">
+                    <label asp-for="Category.Name">Name</label>
+                    <input type="text" class="form-control" placeholder="Name" asp-for="Category.Name">
+                    <span asp-validation-for="Category.Name" class="text-danger"></span>
+                </div>
+                <div class="form-check form-check-flat form-check-primary">
+                    <label class="form-check-label" asp-for="IsMain">
+                        <input type="checkbox"  class="form-check-input isMain" asp-for="IsMain" value="@Model.IsMain">
+                        Is Main
+                    </label>
+                </div>
+                <div class="main-wrapper">
+                    <div class="form-group file" style="display:none;">
+                        <label asp-for="File">Upload a file</label>
+                        <input type="file" accept="image/*" asp-for="File" />
+                        <br />
+                        <span asp-validation-for="File" class="text-danger"></span>
+                    </div>
+                    <div class="form-group parent">
+                        <select asp-for="ParentId">
+                            <option selected disabled>Select a parent</option>
+                            @foreach (Category category in Model.ParentList)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="ParentId" class="text-danger"></span>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary me-2">Submit</button>
+                <button class="btn btn-light" asp-action="Index">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts{ 
+    <partial name="_ValidationScripts" />
+    <script>
+        "use strict";
+        if ($('.isMain').is(':checked')) {
+            $(".main-wrapper .file").fadeToggle();
+            $(".main-wrapper .parent").fadeToggle();
+        }
+        $(".isMain").on("change", () => {
+            $(".main-wrapper .file").fadeToggle();
+            $(".main-wrapper .parent").fadeToggle();
+        })
+    </script>
+}
