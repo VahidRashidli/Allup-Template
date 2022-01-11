@@ -13,6 +13,6 @@ namespace Allup_Template.Areas.Admin.View_Models
         public Category Category { get; set; }
         public ICollection<Category> ParentList { get; set; }
         public int ParentId { get; set; }
-        public bool IsMain { get; set; } = false;
+        public bool IsMain { get; set; } 
     }
 }

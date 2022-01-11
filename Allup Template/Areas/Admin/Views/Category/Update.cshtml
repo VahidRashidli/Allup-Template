@@ -1,0 +1,56 @@
+﻿@model Category
+@if (Model.IsMain)
+{
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Update form</h4>
+                <p class="card-description">
+                    Update a category
+                </p>
+                <form enctype="multipart/form-data" class="forms-sample" asp-action="Update" method="post">
+                    <div class="form-group">
+                        <label asp-for="Name">New Name</label>
+                        <input type="text" class="form-control" placeholder="Name" asp-for="Name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="File">New Name</label>
+                        <input accept="image/*" type="file" class="form-control" asp-for="File">
+                        <span asp-validation-for="File" class="text-danger"></span>
+                    </div>
+                    <input type="hidden" asp-for="IsMain" value="true"/>
+                    <button type="submit" class="btn btn-primary me-2">Submit</button>
+                    <button class="btn btn-light" asp-action="Index">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Update form</h4>
+                <p class="card-description">
+                    Update a category
+                </p>
+                <form class="forms-sample" asp-action="Update" method="post">
+                    <div class="form-group">
+                        <label asp-for="Name">New Name</label>
+                        <input type="text" class="form-control" placeholder="Name" asp-for="Name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <input type="hidden" asp-for="IsMain" value="false" />
+                    <button type="submit" class="btn btn-primary me-2">Submit</button>
+                    <button class="btn btn-light" asp-action="Index">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts{
+    <partial name="_ValidationScripts" />
+}

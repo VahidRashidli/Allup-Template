@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Allup_Template.Models
 {
@@ -13,6 +14,10 @@ namespace Allup_Template.Models
         public string Name { get; set; }
         public bool IsMain { get; set; }
         public Category Parent { get; set; }
+       
+        public List<Category> Children { get; set; }
         public string Image { get; set; }
+        [NotMapped]
+        public IFormFile File { get; set; }
     }
 }

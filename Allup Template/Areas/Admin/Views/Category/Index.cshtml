@@ -32,7 +32,9 @@
                                 @category.CreatedDate.ToString("dd/MM/yyyy")
                             </td> 
                             <td>
-                                <a asp-action="Detail" class="btn btn-warning">Details</a>
+                                <a asp-action="Detail" class="btn btn-warning" asp-route-id="@category.Id">Details</a>
+                                <a asp-action="Delete" class="btn btn-danger" asp-route-id="@category.Id">Delete</a>
+                                <a asp-action="Update" class="btn btn-danger" asp-route-id="@category.Id">Update</a>
                             </td>
                         </tr>
                         }
@@ -58,6 +60,7 @@
                                 <th>
                                 Created Date
                                 </th>
+                                <th>Parent</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,7 +74,12 @@
                                     @category.CreatedDate.ToString("dd/MM/yyyy")
                                 </td>
                                 <td>
-                                    <a asp-action="Detail" class="btn btn-warning">Details</a>
+                                    @category.Parent.Name
+                                </td>
+                                <td>
+                                    <a asp-action="Detail" class="btn btn-warning" asp-route-id="@category.Id">Details</a>
+                                    <a asp-action="Delete" class="btn btn-danger" asp-route-id="@category.Id">Delete</a>
+                                    <a asp-action="Update" class="btn btn-danger" asp-route-id="@category.Id">Update</a>
                                 </td>
                             </tr>
                             }
