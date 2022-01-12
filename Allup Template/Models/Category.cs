@@ -19,5 +19,7 @@ namespace Allup_Template.Models
         public string Image { get; set; }
         [NotMapped]
         public IFormFile File { get; set; }
+        public ICollection<Product> Products { get; set; }
+        public ICollection<CategoryProduct> CategoryProducts { get; set; }
     }
 }
