@@ -22,7 +22,7 @@ namespace Allup_Template.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categories.Where(c=>c.IsMain).ToListAsync());
+            return View(await _context.Categories.Where(c=>c.IsMain && !c.IsDeleted).ToListAsync());
         }
     }
 }

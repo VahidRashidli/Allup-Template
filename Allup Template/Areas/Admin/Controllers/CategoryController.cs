@@ -36,29 +36,32 @@ namespace Allup_Template.Areas.Admin.Controllers
         {
             return View(new CategoryCreateViewModel()
             {
-            ParentList=await _context.Categories.Where(c=>c.IsMain).ToListAsync()
+            ParentList=await _context.Categories.Where(c=>c.IsMain && !c.IsDeleted).ToListAsync()
             });
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryCreateViewModel model,int Id)
         {
-            if (model.Category.Name == null)
-            {
-                return View(new CategoryCreateViewModel()
-                {
-                    ParentList = await _context.Categories.Where(c => c.IsMain).ToListAsync()
-                });
-            }
             if(model.IsMain)
             {
+                if (model.Category.Name == null)
+                {
+                    return View(new CategoryCreateViewModel()
+                    {
+                        ParentList = await _context.Categories.Where(c => c.IsMain&&!c.IsDeleted)
+                        .ToListAsync(),
+                        IsMain = true
+                    });
+                }
                 if (model.File==null)
                 {
                     ModelState.AddModelError(nameof(CategoryCreateViewModel.File),
                        "A parent category must have an image!");
                     return View(new CategoryCreateViewModel()
                     {
-                        ParentList = await _context.Categories.Where(c => c.IsMain).ToListAsync(),
+                        ParentList = await _context.Categories.Where(c => c.IsMain && !c.IsDeleted)
+                        .ToListAsync(),
                         IsMain=true
                     });
                 }
@@ -68,7 +71,8 @@ namespace Allup_Template.Areas.Admin.Controllers
                       "The file  has to be image!");
                     return View(new CategoryCreateViewModel()
                     {
-                        ParentList = await _context.Categories.Where(c => c.IsMain).ToListAsync(),
+                        ParentList = await _context.Categories.Where(c => c.IsMain && !c.IsDeleted)
+                        .ToListAsync(),
                         IsMain=true
                     });
                 }
@@ -78,7 +82,8 @@ namespace Allup_Template.Areas.Admin.Controllers
                       "The file is too large!");
                     return View(new CategoryCreateViewModel()
                     {
-                        ParentList = await _context.Categories.Where(c => c.IsMain).ToListAsync(),
+                        ParentList = await _context.Categories.Where(c => c.IsMain && !c.IsDeleted)
+                        .ToListAsync(),
                         IsMain=true
                     });
                 }
@@ -99,7 +104,9 @@ namespace Allup_Template.Areas.Admin.Controllers
                         "A child category must have a parent category!");
                     return View(new CategoryCreateViewModel()
                     {
-                        ParentList = await _context.Categories.Where(c => c.IsMain).ToListAsync()
+                        ParentList = await _context.Categories.Where(c => c.IsMain && !c.IsDeleted)
+                        .ToListAsync(),
+                        IsMain=false
                     });
                 }
                 await _context.Categories.AddAsync(new Category()
@@ -128,11 +135,11 @@ namespace Allup_Template.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id,Category category)
         {
-            Category dbcategory = await _context.Categories.Include(c => c.Children).
-                FirstOrDefaultAsync(c => c.Id == id);
+            Category dbcategory = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
             if (dbcategory == null) return NotFound();
             dbcategory.IsDeleted = true;
             dbcategory.DeletedDate = DateTime.Now;
+            _context.Categories.Update(dbcategory);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -151,30 +158,26 @@ namespace Allup_Template.Areas.Admin.Controllers
             if (!ModelState.IsValid) return View();
             if (category.IsMain)
             {
-                if (category.File==null)
+                if (category.File!=null)
                 {
-                    ModelState.AddModelError(nameof(Category.File), "You must upload a file");
-                    return View();
+                    if (!category.File.CheckFileContent())
+                    {
+                        ModelState.AddModelError(nameof(Category.File),
+                          "The file  has to be image!");
+                        return View();
+                    }
+                    if (!category.File.CheckFileSize())
+                    {
+                        ModelState.AddModelError(nameof(Category.File),
+                          "The file is too large!");
+                        return View();
+                    }
+                    FileDeleter.Delete(dbcategory.Image, FileNameConstants.Image);
+                    Guid guid = Guid.NewGuid();
+                    await category.File.CreateFileAsync(FileNameConstants.Image, guid);
+                    dbcategory.Image = guid + category.File.FileName;
                 }
-                if (!category.File.CheckFileContent())
-                {
-                    ModelState.AddModelError(nameof(Category.File),
-                      "The file  has to be image!");
-                    return View();
-                }
-                if (!category.File.CheckFileSize())
-                {
-                    ModelState.AddModelError(nameof(Category.File),
-                      "The file is too large!");
-                    return View();
-                }
-                if (System.IO.File.Exists(Path.Combine(FileNameConstants.Image, dbcategory.Image)))
-                {
-                    System.IO.File.Delete(Path.Combine(FileNameConstants.Image, dbcategory.Image));
-                }
-                Guid guid = Guid.NewGuid();
-                await category.File.CreateFileAsync(FileNameConstants.Image, guid);
-                dbcategory.Image = guid + category.File.FileName;
+                
             }
             dbcategory.Name = category.Name;
             await _context.SaveChangesAsync();

@@ -14,7 +14,7 @@
                 </div>
                 <div class="form-check form-check-flat form-check-primary">
                     <label class="form-check-label" asp-for="IsMain">
-                        <input type="checkbox"  class="form-check-input isMain" asp-for="IsMain" >
+                        <input type="checkbox"  class="form-check-input isMain" asp-for="IsMain" value="@Model.IsMain" >
                         Is Main
                     </label>
                 </div>
@@ -46,13 +46,20 @@
     <partial name="_ValidationScripts" />
     <script>
         "use strict";
-        if ($('.isMain').is(':checked')) {
-            $(".main-wrapper .file").fadeToggle();
-            $(".main-wrapper .parent").fadeToggle();
+        window.onload = () => {
+            if ($('.isMain').is(':checked')) {
+                $(".main-wrapper .file").fadeToggle();
+                $(".main-wrapper .parent").fadeToggle();
+            }
+            $(".isMain").on("change", () => {
+                $(".main-wrapper .file").fadeToggle();
+                $(".main-wrapper .parent").fadeToggle();
+                if ($('.isMain').is(':checked')) {
+                    $('.isMain')[0].value = true
+                } else {
+                    $('.isMain')[0].value = false
+                }
+            })
         }
-        $(".isMain").on("change", () => {
-            $(".main-wrapper .file").fadeToggle();
-            $(".main-wrapper .parent").fadeToggle();
-        })
     </script>
 }
