@@ -27,6 +27,16 @@ namespace Allup_Template.DAL
                     new Category { Image= "category-5.jpg",IsMain=true,Name="Bottoms" }
                     );
             }
+            if (!_context.Brands.Any())
+            {
+                _context.Brands.AddRange(
+                    new Brand() { Name="Sony"},
+                    new Brand() { Name="Philips"},
+                    new Brand() { Name="Example1"},
+                    new Brand() { Name="Example2"},
+                    new Brand() { Name="Example3"}
+                    );
+            }
             await _context.SaveChangesAsync();
         }
     }

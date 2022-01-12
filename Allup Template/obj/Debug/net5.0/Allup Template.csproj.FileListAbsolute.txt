@@ -155,3 +155,4 @@ C:\Users\User\OneDrive\Рабочий стол\C#Practise\Allup Template\Allup T
 C:\Users\User\OneDrive\Рабочий стол\C#Practise\Allup Template\Allup Template\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
 C:\Users\User\OneDrive\Рабочий стол\C#Practise\Allup Template\Allup Template\obj\Debug\net5.0\Razor\Areas\Admin\Views\Category\Delete.cshtml.g.cs
 C:\Users\User\OneDrive\Рабочий стол\C#Practise\Allup Template\Allup Template\obj\Debug\net5.0\Razor\Areas\Admin\Views\Category\Update.cshtml.g.cs
+C:\Users\User\OneDrive\Рабочий стол\C#Practise\Allup Template\Allup Template\obj\Debug\net5.0\Razor\Areas\Admin\Views\Product\Create.cshtml.g.cs

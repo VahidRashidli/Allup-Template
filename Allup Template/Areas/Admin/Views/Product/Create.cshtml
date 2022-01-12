@@ -1,0 +1,110 @@
+﻿@model ProductCreateViewModel
+<div class="col-md-6 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Product form</h4>
+            <p class="card-description">
+                Create a product
+            </p>
+            <form enctype="multipart/form-data" class="forms-sample" asp-action="Create" method="post">
+                <div class="form-group">
+                    <label asp-for="Product.Name">Name</label>
+                    <input class="form-control" placeholder="Name" asp-for="Product.Name">
+                    <span asp-validation-for="Product.Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.ProductCode">Product code</label>
+                    <input class="form-control" placeholder="Product code" asp-for="Product.ProductCode">
+                    <span asp-validation-for="Product.ProductCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.Price">Product Price</label>
+                    <input class="form-control" placeholder="Product Price" asp-for="Product.Price">
+                    <span asp-validation-for="Product.Price" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IsDiscounted">Is Discounted</label>
+                    <input asp-for="IsDiscounted" class="discountCheck" value="@Model.IsDiscounted">
+                    <span asp-validation-for="IsDiscounted" class="text-danger"></span>
+                </div>
+                <div id="discount-wrapper" style="display:none;">
+                    <div class="form-group">
+                        <label asp-for="Product.DiscountPercentage">The percentage</label>
+                        <input class="form-control" asp-for="Product.DiscountPercentage">
+                        <span asp-validation-for="Product.DiscountPercentage" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.Count">Count in stock</label>
+                    <input class="form-control" asp-for="Product.Count">
+                    <span asp-validation-for="Product.Count" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.Description">Description</label>
+                    <textarea class="Description" asp-for="Product.Description" placeholder="Description"></textarea>
+                    <span asp-validation-for="Product.Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <select asp-items="new SelectList(Model.Brands,nameof(Brand.Id),nameof(Brand.Name))" asp-for="BrandId">
+                        <option selected disabled>---Select a brand---</option>
+                    </select>
+                    <span asp-validation-for="BrandId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <select asp-items="new SelectList(Model.ParentCategories,nameof(Category.Id),nameof(Category.Name))" asp-for="ParentCategoryId">
+                        <option selected disabled>---Select a Parent Category---</option>
+                    </select>
+                    <span asp-validation-for="ParentCategoryId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <select asp-items="new SelectList(Model.ChildCategories,nameof(Category.Id),nameof(Category.Name))" asp-for="ChildCategoryId">
+                        <option selected disabled>---Select a Child Category---</option>
+                    </select>
+                    <span asp-validation-for="ChildCategoryId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MainImage">Upload the main</label>
+                    <input accept="image/*" asp-for="MainImage" />
+                    <br />
+                    <span asp-validation-for="MainImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ImageFiles">Upload images</label>
+                    <input accept="image/*" asp-for="ImageFiles" multiple />
+                    <br />
+                    <span asp-validation-for="ImageFiles" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary me-2">Submit</button>
+                <button class="btn btn-light" asp-action="Index">Cancel</button>
+            </form>
+            <div asp-validation-summary="All" class="text-danger"></div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <partial name="_ValidationScripts">
+        <script src="https://cdn.ckeditor.com/ckeditor5/31.1.0/classic/ckeditor.js"></script>
+        <script>
+            'use strict';
+            window.onload = () => {
+                ClassicEditor
+                    .create(document.querySelector('.Description'))
+                    .then(editor => {
+                        console.log(editor);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                let discountCheckBox = document.querySelector(".discountCheck");
+                if ($('.discountCheck').is(':checked')) {
+                    $("#discount-wrapper").fadeToggle();
+                }
+                $(".discountCheck").change(function (){
+                    $("#discount-wrapper").fadeToggle();
+                    if ($(".discountCheck").is(':checked')) {
+                        discountCheckBox.value =true
+                    } else discountCheckBox.value = false
+                });
+            }
+        </script>
+}
